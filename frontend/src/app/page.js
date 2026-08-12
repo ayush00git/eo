@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import EventDetails from '@/components/EventDetails';
-import { User } from 'lucide-react';
+import { User, ArrowLeft } from 'lucide-react';
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 
@@ -19,6 +19,16 @@ const colours = [
   '#03dbfc',
   '#fcb603',
 ]
+
+// Deterministic colour per venue so the same hall keeps the same colour
+// across refetches instead of jumping to a random one each time.
+const colourForVenue = (venueId = '') => {
+  let hash = 0;
+  for (let i = 0; i < venueId.length; i++) {
+    hash = (hash * 31 + venueId.charCodeAt(i)) >>> 0;
+  }
+  return colours[hash % colours.length];
+};
 
 export default function VenueBookingCalendar() {
   const [selectedVenue, setSelectedVenue] = useState(null);
@@ -73,7 +83,7 @@ export default function VenueBookingCalendar() {
             title: booking.title + " | " + (venues.find((venue) => venue._id === booking.hall))?.name + " | " + booking.startTime + "-" + booking.endTime,
             start: booking.startDate + "T" + booking.startTime + ":00",
             end: booking.endDate + "T" + booking.endTime + ":00",
-            color: colours[Math.floor(Math.random() * colours.length)],
+            color: colourForVenue(booking.hall),
             venueId: booking.hall,
             org: booking.Organization,
             user: booking.user.name,
@@ -87,9 +97,6 @@ export default function VenueBookingCalendar() {
       });
 
   }
-
-
-
 
 
 
@@ -138,87 +145,97 @@ export default function VenueBookingCalendar() {
       console.error("Error generating PDF:", error);
     }
   };
-  return (<div>
-    <div className=' absolute top-0 right-0 p-2 drop-shadow-2xl z-100 px-10 flex border-2 m-2 rounded-xl'>
-      <Link href="/login" className='text-blue-500 '><User className='inline' /> Login</Link>
-    </div>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <EventDetails isOpen={selectedEvent} onClose={() => setSelectedEvent(null)} selectedEvent={selectedEvent} venues={venues} />
 
-    <EventDetails isOpen={selectedEvent} onClose={() => setSelectedEvent(null)} selectedEvent={selectedEvent} venues={venues} />
-    <div className="w-full p-6 bg-white rounded-xl drop-shadow-lg ">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">📅 Venue Booking Calendar</h1>
-      <div className="flex justify-center mb-6 gap-4">
-        <select
-          className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          onChange={(e) => setSelectedVenue(venues.find(v => v._id === (e.target.value)))}
-        >
-          <option value="">🏢 Select Venue</option>
-          {venues.map(venue => (
-            <option key={venue._id} value={venue._id}>{venue.name}</option>
-          ))}
-        </select>
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">Venue Booking Calendar</h1>
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-blue-600 shadow-sm transition hover:bg-blue-50 sm:self-auto"
+          >
+            <User className="size-4" />
+            Login
+          </Link>
+        </div>
 
-        <select
-          className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          value={view}
-          onChange={(e) => changeView(e.target.value)}
-        >
-          <option value="dayGridMonth">📆 Month View</option>
-          <option value="dayGridWeek">📅 Week View</option>
-          <option value="timeGridDay">📍 Day View</option>
-        </select>
-        {/* <button onClick={() => generatePDF("calendar")} className="p-3 border border-gray-300 rounded-lg focus:outline-none bg-black text-white focus:ring-2 focus:ring-blue-500 transition">Export PDF</button> */}
+        <div className="w-full rounded-xl bg-white p-4 shadow-lg sm:p-6">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+            <select
+              className="w-full rounded-lg border border-gray-300 p-3 text-sm text-gray-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto"
+              onChange={(e) => setSelectedVenue(venues.find(v => v._id === e.target.value))}
+            >
+              <option value="">All Venues</option>
+              {venues.map(venue => (
+                <option key={venue._id} value={venue._id}>{venue.name}</option>
+              ))}
+            </select>
+
+            <select
+              className="w-full rounded-lg border border-gray-300 p-3 text-sm text-gray-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-auto"
+              value={view}
+              onChange={(e) => changeView(e.target.value)}
+            >
+              <option value="dayGridMonth">Month View</option>
+              <option value="dayGridWeek">Week View</option>
+              <option value="timeGridDay">Day View</option>
+            </select>
+            {/* <button onClick={() => generatePDF("calendar")} className="p-3 border border-gray-300 rounded-lg focus:outline-none bg-black text-white focus:ring-2 focus:ring-blue-500 transition">Export PDF</button> */}
+          </div>
+
+          <div id="calendar-container" className="rounded-lg bg-gray-50 p-3 shadow-inner sm:p-4">
+            {view !== 'dayGridMonth' && (
+              <button
+                onClick={() => changeView('dayGridMonth')}
+                className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+              >
+                <ArrowLeft className="size-4" />
+                Back to Month
+              </button>
+            )}
+            <div className="overflow-x-auto">
+              <div className="min-w-[640px]">
+                <FullCalendar
+                  id="calendar"
+                  ref={(ref) => setCalendarRef(ref)} // Store calendar reference
+                  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                  initialView={view}
+                  events={filteredEvents}
+                  headerToolbar={{
+                    left: 'prev today next',
+                    center: 'title',
+                    right: ''
+                  }}
+                  views={{
+                    dayGridMonth: { buttonText: 'Month' },
+                    dayGridWeek: { buttonText: 'Week' },
+                    timeGridDay: { buttonText: 'Day' }
+                  }}
+                  height="auto"
+                  eventContent={renderEventContent}
+                  eventClick={(info) => setSelectedEvent(info.event)}
+                  dateClick={(info) => {
+                    changeView('timeGridDay');
+                    calendarRef.getApi().gotoDate(info.dateStr);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="calendar-container" className={`bg-gray-100 p-4 rounded-lg shadow-md `}>
-        {view !== 'dayGridMonth' && <button onClick={() => changeView('dayGridMonth')} className="my-2 p-2 border-2 text-black rounded-lg ">
-          🔙Back
-        </button>}
-        <FullCalendar
-          id="calendar"
-          ref={(ref) => setCalendarRef(ref)} // Store calendar reference
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView={view}
-          events={filteredEvents}
-          headerToolbar={{
-            left: 'prev today next',
-            center: 'title',
-            right: ''
-          }}
-          views={{
-            dayGridMonth: { buttonText: 'Month' },
-            dayGridWeek: { buttonText: 'Week' },
-            timeGridDay: { buttonText: 'Day' }
-          }}
-          height="auto"
-          eventContent={renderEventContent}
-          eventClick={(info) => setSelectedEvent(info.event)}
-          dateClick={(info) => {
-            changeView('timeGridDay');
-            calendarRef.getApi().gotoDate(info.dateStr);
-          }}
-        />
-      </div>
-      {/* {selectedEvent && <div className='h-[75vh]'></div>
-        } */}
-
-
     </div>
-  </div>
   );
 }
 function renderEventContent(eventInfo) {
   return (
-    <div className="bg-opacity-90 p-1 hover:scale-105 hover:overflow-visible overflow-hidden text-xs rounded-md text-black shadow-sm"
-      style={{
-        backgroundColor: eventInfo.event.backgroundColor,
-        padding: '5px',
-        borderRadius: '6px',
-        fontWeight: '600',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px'
-      }}
+    <div
+      className="flex items-center gap-1 overflow-hidden rounded-md px-1.5 py-1 text-xs font-semibold text-black shadow-sm transition hover:brightness-95"
+      style={{ backgroundColor: eventInfo.event.backgroundColor }}
     >
-      <span className='mx-auto block'>{eventInfo.event.title}</span>
+      <span className="truncate">{eventInfo.event.title}</span>
     </div>
   );
 }
