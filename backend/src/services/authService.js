@@ -174,7 +174,7 @@ async function verifysend(email) {
         
 
         const response = mailSender.sendMail({
-            from: "himanshuten092004@gmail.com",
+            from: serverConfig.ADMIN_EMAIL,
             to: email,
             subject: "Verify Your Email - Complete Your Account Registration 🚀",
             html: `<!DOCTYPE html>
