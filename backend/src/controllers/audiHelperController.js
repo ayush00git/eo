@@ -18,7 +18,6 @@ async function addHelper(req,res) {
         SuccessResponse.message="Added Successfully";
         return res.status(StatusCodes.ACCEPTED).json(SuccessResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error.message;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -40,7 +39,6 @@ async function updateHelper(req,res) {
         SuccessResponse.message = "Helper updated successfully";
         res.status(StatusCodes.OK).json(SuccessResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error.message;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }

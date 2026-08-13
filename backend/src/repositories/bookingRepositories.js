@@ -24,7 +24,6 @@ class BookingRepository extends crudRepositories {
     }
     async getAllbooking(query = {}) {
         try {
-            console.log("Fetching all bookings...");
             let response = await this.model.find(query).sort({ createdAt: -1 });
     
             // Fetch user details concurrently and modify response

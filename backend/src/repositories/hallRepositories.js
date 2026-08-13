@@ -9,9 +9,7 @@ class HallRepository extends crudRepositories {
     }
     async getById(id) {//to be fix
         try {
-            console.log("id",id);
             const hall = await this.model.findOne({_id:id});
-            console.log(hall);
             return hall;
         } catch (error) {
             return new AppError("Error while fetching hall", StatusCodes.INTERNAL_SERVER_ERROR);

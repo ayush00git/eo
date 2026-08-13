@@ -15,7 +15,6 @@ async function signUp(req,res) {
         return res.status(StatusCodes.OK).json(SuccessResponse);
         
     } catch (err) {
-        console.log(err);
         ErrorResponse.error = err;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -40,7 +39,6 @@ async function signIn(req,res) {
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
         
     } catch (err) {
-        console.log(err);
         ErrorResponse.error=err;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -57,7 +55,6 @@ async function check(req,res) {
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
         
     } catch (err) {
-        console.log(err);
         ErrorResponse.error=err;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -83,7 +80,6 @@ async function resetPassword(req,res) {
         ErrorResponse.message='Failed to change password';
         return res.status(StatusCodes.EXPECTATION_FAILED).json(ErrorResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -104,7 +100,6 @@ async function updatePassword(req,res) {
         ErrorResponse.message='Failed to send link';
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.message='Invalid Email Address';
         ErrorResponse.error=error;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
@@ -127,7 +122,6 @@ async function updateTokenPassword(req,res) {
             return res.status(StatusCodes.ACCEPTED).json(SuccessResponse);
         }
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -136,7 +130,6 @@ async function verifysend(req,res) {
     try {
         const email=req.body.email;
         const response=await AuthService.verifysend(email);
-        console.log(response);
         
         if(response){
             SuccessResponse.message='Verification mail sent';
@@ -145,7 +138,6 @@ async function verifysend(req,res) {
         ErrorResponse.message='Failed to send verification mail';
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }
@@ -161,7 +153,6 @@ async function verifyAccount(req,res) {
         ErrorResponse.message='Failed to verify account';
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     } catch (error) {
-        console.log(error);
         ErrorResponse.error=error;
         return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
     }

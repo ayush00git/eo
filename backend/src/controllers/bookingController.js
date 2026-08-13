@@ -17,14 +17,12 @@ async function addBooking(req,res) {
         Organization:req.body.Organization,
         status:"pending"
     }
-    console.log(data);
     try {
         const booking = await BookingService.createBooking(data);
         if(!booking) {
             ErrorResponse.message = "Booking not created";
             res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
         }
-        console.log(booking);
         SuccessResponse.data = booking;
         SuccessResponse.message = "Booking added successfully";
         res.status(StatusCodes.CREATED).json(SuccessResponse);
@@ -39,7 +37,6 @@ async function addBooking(req,res) {
 async function getBooking(req,res) {
     try {
        
-        console.log(req.query);
         const { status } = req.query; 
         
         const filter = {};
@@ -140,7 +137,6 @@ async function updateBookingStatus(req,res) {
         messFromAdmin:req.body.messFromAdmin,
         conflicts:req.body.conflicts||[]
     }
-    console.log(data);
     
     try {
         const booking = await BookingService.updateBookingStatus(id,data);

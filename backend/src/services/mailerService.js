@@ -71,7 +71,7 @@ async function mailBookkingNotificationToAdmin(user, booking, venue) {
     <strong>Booking System</strong></p>
 
     <div class="footer">
-      <p>&copy; 2025 Venue Booking System. All rights reserved.</p>
+      <p>&copy; ${new Date().getFullYear()} Venue Booking System. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -162,7 +162,7 @@ const response = await mailSender.sendMail({
         <strong>NIT Hamirpur</strong></p>
 
         <div class="footer">
-            <p>&copy; 2025 Venue Booking System. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} Venue Booking System. All rights reserved.</p>
         </div>
     </div>
 </body>

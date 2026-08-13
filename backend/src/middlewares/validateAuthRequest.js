@@ -41,7 +41,6 @@ async function checkAuth(req,res,next){
             throw new Error('Malformed Authorization header');
         }
         const response= await AuthService.isAuthentication(token);
-        console.log("the response will be in auth....",response) 
         if(response){
             req.user=response;
             // console.log(response)
@@ -49,7 +48,6 @@ async function checkAuth(req,res,next){
         }
    }
     catch(error){
-        console.log(error)
         return res
         .status(StatusCodes.UNAUTHORIZED)
         .json(error);

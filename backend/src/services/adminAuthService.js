@@ -45,7 +45,6 @@ async function generateToken(params) {
         const token = jwt.sign({ id: params._id }, serverConfig.JWT_SECRET_KEY, {expiresIn: serverConfig.JWT_EXPIRE});
         return token;
     } catch (err) {
-        console.log("error in the create token",err);
         throw err;
     }
 }

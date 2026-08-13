@@ -55,7 +55,6 @@ class CrudRepository {
 
     async getAll(query={}) {
         try {
-            console.log("response");
             const response = await this.model.find(query).sort({createdAt: -1});
             return response;
         } catch (error) {
@@ -77,7 +76,6 @@ class CrudRepository {
             }
             return response;
         } catch (error) {
-            console.log(error);
             
             if(error.name == 'AppError') throw error;
             throw new AppError(

@@ -20,14 +20,11 @@ async function createBooking(data) {
         const user = await authRepo.findUserById(data.user);
         const venue = await hallrpo.getById(data.hall);
         mailBookkingNotificationToAdmin(user, booking,venue.name).then((response) => {
-            console.log("Mail sent successfully", response);
         }).catch((error) => {
-            console.log("Error sending mail", error);
         }
         );
         return booking;
     } catch (error) {
-        console.log("Error while adding booking", error);
         return new AppError("Error while adding booking", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
@@ -196,7 +193,6 @@ NIT Hamirpur`
 async function updateBookingStatus(id, data) {
     try {
         const booking = await bookingRepo.getById(id);
-        console.log("Booking", booking);
 
         if (!booking) {
             return new ErrorResponse("Booking not found", StatusCodes.NOT_FOUND);
@@ -206,13 +202,10 @@ async function updateBookingStatus(id, data) {
             const venue = await hallrpo.getById(booking.hall);
             const staff = await helperRepo.getAll({venue: venue._id});
             staff.forEach(async (staff) => {
-                console.log(booking)
 
             mailtoStaff(staff, booking,venue.name).then((response) => {
-                console.log("Mail sent successfully", response);
             }
             ).catch((error) => {
-                console.log("Error sending mail", error);
             });
             });
 
@@ -221,10 +214,8 @@ async function updateBookingStatus(id, data) {
                 const message = ApprovedBookingConflicts(booking.user.name, booking, venue.name, data.messFromAdmin, data.conflicts)
                 const response = await bookingRepo.update(id, { status: "approved", messFromAdmin: message });
                 mailSendApprovedConflicts(booking.user, booking, venue.name, data.messFromAdmin, data.conflicts).then((response) => {
-                    console.log("Mail sent successfully", response);
                 }
                 ).catch((error) => {
-                    console.log("Error sending mail", error);
                 });
 
                 data.conflicts.forEach(async (conflict) => {
@@ -232,10 +223,8 @@ async function updateBookingStatus(id, data) {
                     const message = VictimMessage(victim.name, booking, venue.name, data.messFromAdmin, conflict)
                     bookingRepo.update(conflict._id, { status: "approved", messFromAdmin: message });
                     mailSendVictim(victim, booking, venue.name, conflict).then((response) => {
-                        console.log("Mail sent successfully", response);
                     }
                     ).catch((error) => {
-                        console.log("Error sending mail", error);
                     });
                 });
 
@@ -248,15 +237,12 @@ async function updateBookingStatus(id, data) {
 
                 const message = ApprovedBookingSimple(booking.user.name, booking, venue.name, data.messFromAdmin)
                 const response = await bookingRepo.update(id, { status: "approved", messFromAdmin: message });
-                console.log("Response", venue);
 
 
 
                 mailSendApprovedSimple(booking.user, booking, venue.name, data.messFromAdmin).then((response) => {
-                    console.log("Mail sent successfully", response);
                 }
                 ).catch((error) => {
-                    console.log("Error sending mail", error);
                 });
                 return response;
             }
@@ -272,10 +258,8 @@ async function updateBookingStatus(id, data) {
                 const message = RejectedBookingconflicts(booking.user.name, booking, venue.name, data.messFromAdmin, data.conflicts)
                 const response = await bookingRepo.update(id, { status: "rejected", messFromAdmin: message });
                 mailsendRejectedconflicts(booking.user, booking, venue.name, data.conflicts,data.messFromAdmin).then((response) => {
-                    console.log("Mail sent successfully", response);
                 }
                 ).catch((error) => {
-                    console.log("Error sending mail", error);
                 });
 
                 return response;
@@ -285,10 +269,8 @@ async function updateBookingStatus(id, data) {
                 const message = RejectedBooking(booking.user.name, booking, venue.name, data.messFromAdmin)
                 const response = await bookingRepo.update(id, { status: "rejected", messFromAdmin: message });
                 mailsendRejected(booking.user, booking, venue.name, data.messFromAdmin).then((response) => {
-                    console.log("Mail sent successfully", response);
                 }
                 ).catch((error) => {
-                    console.log("Error sending mail", error);
                 });
 
                 return response;

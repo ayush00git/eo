@@ -9,7 +9,6 @@ async function addHelper(data) {
         const response=await AudiHelperRepo.create(data);
         return response;
     } catch (error) {
-        console.log(error);
         throw new AppError("Error while adding helper",StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
@@ -19,7 +18,6 @@ async function getAllHelper() {
         const response=await AudiHelperRepo.getAll();
         return response;
     } catch (error) {
-        console.log(error);
         throw new AppError("Error while getting helper",StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
@@ -29,7 +27,6 @@ async function updateHelper(id,data) {
         const response=await AudiHelperRepo.update(id,data);
         return response;
     } catch (error) {
-        console.log(error);
         throw new AppError("Error while updating helper",StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
@@ -39,7 +36,6 @@ async function getHelper(id) {
         const response=await AudiHelperRepo.get(id);
         return response;
     } catch (error) {
-        console.log(error);
         throw new AppError("Error while getting helper",StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
@@ -49,7 +45,6 @@ async function deleteHelper(id) {
         const response=await AudiHelperRepo.destroy(id);
         return response;
     } catch (error) {
-        console.log(error);
         throw new AppError("Error while deleting helper",StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }

@@ -35,12 +35,10 @@ async function signIn(data) {
         email = data.email;
         // console.log(email);
         const user = await authRepo.findUserByEmail(email);
-        console.log(user);
         if (!user) {
             throw new AppError("Invalid email", StatusCodes.BAD_REQUEST);
         }
         if (!user.verified) {
-            console.log("ye challaa");
 
             throw new AppError("User not verified", StatusCodes.BAD_REQUEST);
         }
@@ -51,7 +49,6 @@ async function signIn(data) {
             throw new AppError("Invalid password", StatusCodes.BAD_REQUEST);
         }
 
-        console.log("ye challaa bhi");
         return user;
     } catch (error) {
 
@@ -98,10 +95,8 @@ async function updatePassword(email) {
                <a href="${resetLink}">Reset Password</a>
                <p>If you did not request a password reset, please ignore this email.</p>`
         });
-        console.log("the response in mail is....", response)
         return token;
     } catch (error) {
-        console.log(error);
         throw new AppError('Invaild Email', StatusCodes.BAD_REQUEST);
     }
 }
@@ -119,7 +114,6 @@ async function updateTokenPassword(data) {
         return user;
 
     } catch (error) {
-        console.log(error);
         
         throw new AppError('Invaild Credentails', StatusCodes.BAD_REQUEST);
     }
@@ -132,7 +126,6 @@ async function generateToken(params) {
         const token = jwt.sign({ id: params._id }, serverConfig.JWT_SECRET_KEY, { expiresIn: serverConfig.JWT_EXPIRE });
         return token;
     } catch (err) {
-        console.log("error in the create token", err);
         throw err;
     }
 }
@@ -145,12 +138,10 @@ async function comparePassword(plainPassword, hashedPassword) {
 async function isAuthentication(token) {
     try {
         const decoded = jwt.verify(token, serverConfig.JWT_SECRET_KEY);
-        console.log(decoded);
 
         const user = await authRepo.findUserById(decoded.id);
         return user;
     } catch (err) {
-        console.log(err);
 
         throw new AppError("Invalid token", StatusCodes.UNAUTHORIZED);
     }
@@ -170,7 +161,6 @@ async function verifysend(email) {
         
 
         const Link=`${process.env.FRONT_URL}/verify-account?account=${token}`;
-        console.log(Link);
         
 
         const response = mailSender.sendMail({
@@ -222,7 +212,7 @@ async function verifysend(email) {
         <a href=${Link} class="btn">Verify Your Account</a>
         <p>If you did not create this account, you can safely ignore this email.</p>
         <div class="footer">
-            <p>&copy; 2025 Venue Booking System. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} Venue Booking System. All rights reserved.</p>
         </div>
     </div>
 </body>
@@ -237,7 +227,6 @@ async function verifysend(email) {
 
     }
     catch (error) {
-        console.log(error);
         if (error instanceof AppError) {
             throw error;
         }
@@ -258,7 +247,6 @@ async function verifyAccount(email){
         return user;
     }
     catch(error){
-        console.log(error);
         if (error instanceof AppError) {
             throw error;
         }

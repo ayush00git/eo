@@ -66,7 +66,6 @@ async function updateHall(req,res) {
         
         
         data.capacity = parseInt(data.capacity);
-        console.log(req.params);
         
         const hall = await HallService.updateHall(id,data);
         SuccessResponse.data = hall;
