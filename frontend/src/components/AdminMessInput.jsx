@@ -16,7 +16,7 @@ const AdminMessageInput = ({ adminMessage, setAdminMessage }) => {
     return (
         <textarea
             ref={textAreaRef}
-            className="w-full p-2 border border-gray-300 rounded-md overflow-y-auto resize-none transition-all"
+            className="w-full rounded-md border border-neutral-300 p-2 text-sm outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 resize-none overflow-y-auto"
             placeholder="Enter any message..."
             value={adminMessage}
             onChange={handleChange}

@@ -1,15 +1,23 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { MdModeEdit, MdDelete } from 'react-icons/md';
 import axios from 'axios';
 import BookingList from '@/components/BookingStatusList';
 import BookingEditModal from '@/components/BookingEditModal';
 import toast from 'react-hot-toast';
+import { cn } from '@/lib/utils';
+
+const STATUSES = [
+  { value: 'All', label: 'All' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
 
 export default function BookingStatus() {
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState('All');
-  const[initialData,setInitialData]=useState({});
+  const [initialData, setInitialData] = useState({});
   const [IsModalOpen, setModalOpen] = useState(false);
   const [venuesList, setVenues] = useState([]);
 
@@ -25,13 +33,8 @@ export default function BookingStatus() {
       },
     })
       .then((res) => {
-        setBookings(res.data.data.map((booking) => ({
-          ...booking,
-          colour: booking.status === "pending" ? "yellow-500" :
-            booking.status === "rejected" ? "red-500" :
-              booking.status === "approved" ? "green-500" : "gray-500" // Default color
-        })));
-      }) 
+        setBookings(res.data.data);
+      })
       .catch((err) => {
         console.error(err);
       });
@@ -100,7 +103,7 @@ export default function BookingStatus() {
         toast.success("Booking updated successfully!");
         setModalOpen(false);
         fetchData(); // Refresh the bookings list after editing
-        
+
       })
       .catch((err) => {
         console.error(err);
@@ -108,36 +111,50 @@ export default function BookingStatus() {
     }
   const filteredBookings = filter === 'All' ? bookings : bookings.filter((b) => b.status.toLowerCase() === filter.toLowerCase());
 
-  return (<>
-    <div className="p-6 bg-white rounded-xl drop-shadow-lg min-h-screen">
-      <h1 className="text-3xl font-bold mb-4">Booking Status</h1>
-
-      {/* Filter Dropdown */}
-      <div className="mb-4 flex items-center space-x-8">
-        <label className="font-semibold">Filter:</label>
-        <select className="border p-2 rounded w-40" value={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="All">All</option>
-          <option value="approved">Approved</option>
-          <option value="pending">Pending</option>
-          <option value="rejected">Rejected</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Booking Status</h1>
+        <p className="mt-1 text-sm text-neutral-500">Track the requests you've made.</p>
       </div>
 
-      {/* Status Legend */}
-      <div className="flex items-center mb-4 space-x-3">
-        <span className="font-semibold">REQUEST STATUS:</span>
-        <span className="flex items-center space-x-1"><span className="bg-red-500 w-4 h-4 rounded-full"></span> <span>Rejected</span></span>
-        <span className="flex items-center space-x-1"><span className="bg-green-500 w-4 h-4 rounded-full"></span> <span>Approved</span></span>
-        <span className="flex items-center space-x-1"><span className="bg-yellow-500 w-4 h-4 rounded-full"></span> <span>Pending</span></span>
-        <span className="flex items-center space-x-1"><span className="bg-black w-4 h-4 rounded-full"></span> <span>Cancelled</span></span>
+      <div className="flex flex-wrap gap-2">
+        {STATUSES.map((status) => {
+          const count = status.value === 'All'
+            ? bookings.length
+            : bookings.filter((b) => b.status === status.value).length;
+          const active = filter === status.value;
+          return (
+            <button
+              key={status.value}
+              onClick={() => setFilter(status.value)}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
+                active
+                  ? "border-neutral-900 bg-neutral-900 text-white"
+                  : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50"
+              )}
+            >
+              {status.label}
+              <span className={cn("rounded-full px-1.5 text-xs font-semibold", active ? "bg-white/20 text-white" : "bg-neutral-100 text-neutral-500")}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Booking List */}
-      <BookingList filteredBookings={filteredBookings} venuesList={venuesList} handleEdit={handleEdit} handleDelete={handleDelete} handleCancel={handleCancel} />
+      <div className="mt-6">
+        <BookingList
+          filteredBookings={filteredBookings}
+          venuesList={venuesList}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          handleCancel={handleCancel}
+        />
+      </div>
+
+      <BookingEditModal isOpen={IsModalOpen} onClose={() => setModalOpen(false)} initalData={initialData} venueList={venuesList} onSubmit={handleSubmit} />
     </div>
-      <BookingEditModal isOpen={IsModalOpen} onClose={() => setModalOpen(false)} initalData={initialData} venueList={venuesList} onSubmit={handleSubmit} /></>
   );
-
-
 }

@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import { Building2, Calendar, Clock, Users, AlertTriangle, X } from "lucide-react";
 import AdminMessageInput from "./AdminMessInput";
+import ModalShell from "@/components/adminModals/ModalShell";
 import toast from "react-hot-toast";
 
 const RejectModal = ({ isOpen, onClose, selectedEvent, onSubmit, venues,approvedBookings }) => {
     const [loading, setLoading] = useState(false);
     const [adminMessage, setAdminMessage] = useState("");
     const [ConflictReason, setConflictReason] = useState(false);
-    const venue = venues.find((v) => v._id === selectedEvent.hall)?.name;
 
     if (!isOpen || !selectedEvent) return null;
 
@@ -40,69 +41,69 @@ const RejectModal = ({ isOpen, onClose, selectedEvent, onSubmit, venues,approved
     }
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center  bg-opacity-30 backdrop-blur-sm z-100 ">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-1/3 relative">
-                {loading ? (
-                    <div className="text-center rounded-lg text-lg font-semibold">Processing...</div>
-                ) : (
-                    <div className="w-full">
-                        {/* Close Button */}
-                        <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-xl" onClick={onClose}>
-                            ✖
-                        </button>
-
-                        {/* Title */}
-                        <h2 className="text-2xl font-bold mb-4 text-gray-800">Reject Booking</h2>
-
-                        {/* Booking Details */}
-                        <p className="text-gray-700">
-                            <strong>🏢 Venue:</strong> {venues.find((venue) => venue._id === selectedEvent.hall)?.name || "Unknown"}
-                        </p>
-                        <p className="text-gray-700">
-                            <strong>📅 Date:</strong> {selectedEvent.startDate} To {selectedEvent.endDate}
-                        </p>
-                        <p className="text-gray-700">
-                            <strong>⌛ Time:</strong> {selectedEvent.startTime} - {selectedEvent.endTime}
-                        </p>
-                        <p className="text-gray-700">
-                            <strong>🤵 Organization:</strong> {selectedEvent.Organization}
-                        </p>
-                        {conflicts.length>0&&<div className="flex mt-4 gap-3 items-center">
-                        <input
-                                type="checkbox"
-                                id="check2"
-                                className="w-5 h-5 cursor-pointer mt-2"
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setConflictReason(true);
-                                    } else {
-                                        setConflictReason(false);
-                                    }
-                                }}
-                            />
-                            <label htmlFor="check2" className="text-gray-700 cursor-pointer mr-2">
-                                Use Conflicts As Reason 
-                            </label>
-                        </div>}
-
-
-                        {/* Admin Message Field */}
-                       {!ConflictReason&&<> <label className="block mt-4 text-gray-700 font-medium">Reason of Rejection:</label>
-                        <AdminMessageInput adminMessage={adminMessage}  setAdminMessage={setAdminMessage} /></>}
-
-                        {/* Approve Button */}
-                        <div className="flex justify-center mt-4 gap-3 items-center">
-                            <button
-                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-                                onClick={handleSubmit}
-                            >
-                                ❌ Reject Booking with {adminMessage ? "Above Reason" : "Reason"}
-                            </button>
-                        </div>
-                    </div>
-                )}
+        <ModalShell isOpen={isOpen} onClose={onClose} title="Reject booking" loading={loading}>
+            <div className="space-y-2 text-sm text-neutral-700">
+                <p className="flex items-center gap-2">
+                    <Building2 className="size-4 shrink-0 text-neutral-400" />
+                    {venues.find((venue) => venue._id === selectedEvent.hall)?.name || "Unknown venue"}
+                </p>
+                <p className="flex items-center gap-2">
+                    <Calendar className="size-4 shrink-0 text-neutral-400" />
+                    {selectedEvent.startDate} to {selectedEvent.endDate}
+                </p>
+                <p className="flex items-center gap-2">
+                    <Clock className="size-4 shrink-0 text-neutral-400" />
+                    {selectedEvent.startTime} &ndash; {selectedEvent.endTime}
+                </p>
+                <p className="flex items-center gap-2">
+                    <Users className="size-4 shrink-0 text-neutral-400" />
+                    {selectedEvent.Organization}
+                </p>
             </div>
-        </div>
+
+            {conflicts.length > 0 && (
+                <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3">
+                    <p className="flex items-center gap-1.5 text-sm font-semibold text-red-700">
+                        <AlertTriangle className="size-4" />
+                        Conflict detected
+                    </p>
+                    <ul className="mt-1.5 space-y-1">
+                        {conflicts.map((conflict, index) => (
+                            <li key={index} className="text-sm text-red-600">
+                                {conflict.title} ({conflict.startTime} &ndash; {conflict.endTime})
+                            </li>
+                        ))}
+                    </ul>
+
+                    <label className="mt-3 flex items-center gap-2 text-sm text-neutral-700">
+                        <input
+                            type="checkbox"
+                            id="check2"
+                            className="size-4 cursor-pointer accent-amber-600"
+                            onChange={(e) => setConflictReason(e.target.checked)}
+                        />
+                        Use conflicts as reason
+                    </label>
+                </div>
+            )}
+
+            {!ConflictReason && (
+                <>
+                    <label className="mt-4 mb-1 block text-sm font-medium text-neutral-700">
+                        Reason for rejection
+                    </label>
+                    <AdminMessageInput adminMessage={adminMessage} setAdminMessage={setAdminMessage} />
+                </>
+            )}
+
+            <button
+                className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-md bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700"
+                onClick={handleSubmit}
+            >
+                <X className="size-4" />
+                Reject with {adminMessage ? "above reason" : "reason"}
+            </button>
+        </ModalShell>
     );
 };
 

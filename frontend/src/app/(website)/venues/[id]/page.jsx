@@ -3,74 +3,94 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-
-// Sample venue data (replace with API fetch)
-
+import { ArrowLeft, MapPin, Users, CalendarPlus } from "lucide-react";
 
 export default function VenueDetails() {
   const { id } = useParams(); // Get ID from URL params
   const router = useRouter();
-  const [venueData,setVenues]=useState([]);
+  const [venueData, setVenues] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-   
     fetchVenues();
   }, [])
-  const fetchVenues=async()=>{
+
+  const fetchVenues = async () => {
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/hall/getHall`).
-    then((res) => {
-      setVenues(res.data.data);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+      then((res) => {
+        setVenues(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => setLoading(false));
   }
 
   // Find venue by ID
   const venue = venueData.find((v) => v._id === id);
 
-  if (!venue)
-    return <p className="text-center text-xl font-semibold text-red-500">Venue Not Found</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" />
+      </div>
+    );
+  }
+
+  if (!venue) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-lg font-semibold text-neutral-700">Venue not found</p>
+        <button
+          onClick={() => router.back()}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-amber-700 hover:underline"
+        >
+          <ArrowLeft className="size-4" />
+          Go back
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden my-10">
-      {/* Image Section */}
-      <div className="relative h-64">
-        <Image
-          src={venue.image}
-          alt={venue.name}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-t-lg"
-        />
-        <div className="absolute inset-0  flex items-center justify-center">
-          <h1 className="text-white text-3xl font-bold">{venue.name}</h1>
-        </div>
+    <div className="mx-auto max-w-3xl">
+      <button
+        onClick={() => router.back()}
+        className="mb-4 inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-medium text-neutral-600 shadow-sm transition hover:border-amber-300 hover:text-amber-700"
+      >
+        <ArrowLeft className="size-4" />
+        Back
+      </button>
+
+      <div className="relative h-64 w-full overflow-hidden rounded-2xl border border-neutral-200">
+        <Image src={venue.image} alt={venue.name} fill className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <h1 className="absolute inset-x-0 bottom-4 px-6 text-2xl font-bold text-white drop-shadow-sm">
+          {venue.name}
+        </h1>
       </div>
 
-      {/* Venue Details */}
-      <div className="p-6">
-        <div className="mb-4">
-          <p className="text-gray-600 text-sm">📍 Location: <span className="font-semibold">{venue.location}</span></p>
-          <p className="text-gray-600 text-sm">👥 Capacity: <span className="font-semibold">{venue.capacity} People</span></p>
+      <div className="mt-5">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-600">
+          <span className="inline-flex items-center gap-1.5">
+            <MapPin className="size-4 text-neutral-400" />
+            {venue.location}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Users className="size-4 text-neutral-400" />
+            {venue.capacity} people
+          </span>
         </div>
 
-        <p className="text-gray-700 text-lg leading-relaxed">{venue.description}</p>
+        <p className="mt-4 text-sm leading-relaxed text-neutral-700">{venue.description}</p>
 
-        {/* Action Buttons */}
-        <div className="mt-6 flex justify-between">
-          <button
-            className="px-4 py-2 bg-gray-700 text-white text-sm font-semibold rounded-md hover:bg-gray-600"
-            onClick={() => router.back()}
-          >
-            🔙 Go Back
-          </button>
-          <button
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-500" onClick={() => router.push(`/bookvenue?venue=${venue._id}`)}
-          >
-            📅 Book Venue
-          </button>
-          
-        </div>
+        <button
+          className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700"
+          onClick={() => router.push(`/bookvenue?venue=${venue._id}`)}
+        >
+          <CalendarPlus className="size-4" />
+          Book venue
+        </button>
       </div>
     </div>
   );

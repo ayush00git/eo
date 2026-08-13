@@ -1,5 +1,4 @@
 "use client";
-import BreadcrumNav from '@/components/bredcrum';
 import { useState } from 'react';
 import SilderbarAdmin from '@/components/sidebarAdmin';
 import React from 'react';
@@ -12,7 +11,6 @@ function Layout({ children }) {
       <SilderbarAdmin isopen={isopen} setIsopen={setIsopen} />
 
       <div className="flex flex-1 flex-col min-w-0">
-        <BreadcrumNav />
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
