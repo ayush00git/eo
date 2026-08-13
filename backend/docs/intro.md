@@ -19,8 +19,4 @@ This document explains every variable in `.env.example` and where it's used in t
 - `src/config/server-config.js` reads `process.env` (via `dotenv`) and re-exports the values above, plus `ADMIN_CREATE_FLAG` — an in-memory flag (not env-backed) used by `adminAuthController.js` to track whether the one-time admin account has been created.
 - `src/config/mail-config.js` builds the nodemailer transporter (Gmail) from `ADMIN_EMAIL` / `ADMIN_EMAIL_PASSWORD`.
 - `src/config/db-config.js` builds the Mongo connection from `DB_URI`.
-- `src/config/index.js` re-exports all of the above as a single entry point (`serverConfig`, `mailConfig`, `dbConfig`, ...).
-
-## Notes / history
-
-- `EXPIRES_IN` and `ADMIN_EMAIL2` / `ADMIN_EMAIL_PASSWORD2` previously existed in `server-config.js` but were never wired into any code path (no second mail account or refresh-token flow was implemented). They've been removed to keep config in sync with actual usage. If a secondary admin mailbox or a refresh-token flow is added later, reintroduce the relevant variables at that point.
+- `src/config/index.js` re-exports all of the above as a single entry point (`serverConfig`, `mailConfig`, `dbConfig`, ...). 
