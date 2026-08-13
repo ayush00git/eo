@@ -51,7 +51,6 @@ const VenueUpdateFormModal = ({ isOpen, onClose, onSubmit,initialData={} }) => {
             }
             catch (error) {
                 setLoading(false);
-                console.log(error);
                 toast.error("Error in Uploading Data")
 
             }

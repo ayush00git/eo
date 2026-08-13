@@ -30,7 +30,6 @@ function BreadcrumNav() {
                 setUser(res.data.data)
             })
             .catch((err) => {
-                console.log(err)
             })
     }
     let accumulatedPath = "";

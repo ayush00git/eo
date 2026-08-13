@@ -34,7 +34,6 @@ function Venues() {
       }
     }).
       then((res) => {
-        console.log(res.data);
         fetchVenues();
         toast.success('Venue added successfully');
       }).
@@ -50,7 +49,6 @@ function Venues() {
       }
     }).
       then((res) => {
-        console.log(res.data);
         fetchVenues();
       }).
       catch((err) => {
@@ -64,7 +62,6 @@ function Venues() {
       }
     }).
       then((res) => {
-        console.log(res.data);
         fetchVenues();
         toast.success('Venue Updated Successfully');
       }).

@@ -41,7 +41,6 @@ const VenueFormModal = ({ isOpen, onClose, onSubmit }) => {
             }
             catch (error) {
                 setLoading(false);
-                console.log(error);
                 toast.error("Error in Uploading Data")
 
             }

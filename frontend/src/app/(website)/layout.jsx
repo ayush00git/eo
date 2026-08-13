@@ -1,27 +1,22 @@
 "use client";
-import BreadcrumNav from '@/components/bredcrum'
-import{useState} from 'react'
+import { useState } from 'react'
 import Silderbar from '@/components/silderbar'
 import React from 'react'
-import withAuth  from '@/components/withAuth'
+import withAuth from '@/components/withAuth'
 
-function layout({children}) {
+function Layout({ children }) {
   const [isopen, setIsopen] = useState(true)
   return (
+    <div className="flex min-h-screen bg-neutral-50">
+      <Silderbar isopen={isopen} setIsopen={setIsopen} />
 
-        <div className='flex '>
-          
-            <Silderbar isopen={isopen} setIsopen={setIsopen} />
-          
-            <div className='flex flex-col w-full'>
-            <BreadcrumNav/> 
-            <main className="p-3 mb-5 h-[93vh] overflow-y-auto ">
- 
-            {children}
-            </main>
-            </div>
-        </div>
+      <div className="flex flex-1 flex-col min-w-0">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
+    </div>
   )
 }
 
-export default withAuth(layout)
+export default withAuth(Layout)

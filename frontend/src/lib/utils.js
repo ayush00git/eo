@@ -11,7 +11,6 @@ export async function isAuthenticated() {
     const token = localStorage.getItem("xccess-token");
 
     if (!token) {
-      console.log("false");
       return false;
     }
 
@@ -25,7 +24,6 @@ export async function isAuthenticated() {
           },
         }
       );
-      console.log("true");
       if(!response.data.success){
         localStorage.removeItem("xccess-token");
         return false;
@@ -34,7 +32,6 @@ export async function isAuthenticated() {
     } catch (err) {
       localStorage.removeItem("xccess-token");
       
-      console.log("false");
       return false; // Return false if request fails
     }
   }
@@ -46,7 +43,6 @@ export async function isAuthenticatedAdmin() {
     const token = localStorage.getItem("xccess-token-Admin");
 
     if (!token) {
-      console.log("false");
       return false;
     }
 
@@ -61,7 +57,6 @@ export async function isAuthenticatedAdmin() {
         }
       );
 
-      console.log(response);
       if(!response.data.success){
         localStorage.removeItem("xccess-token-Admin");
         return false;

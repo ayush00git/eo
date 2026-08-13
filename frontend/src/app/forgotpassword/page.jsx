@@ -14,14 +14,12 @@ function Forgotpassword() {
     e.preventDefault()
     axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, { email })
       .then((res) => {
-        console.log(res.data)
         toast.success('Password reset link sent to your email');
         setEmail('');
         setLoading(false)
       }
       )
       .catch((err) => {
-        console.log(err)
         setLoading(false)
         if (err?.response?.data.error?.explanation) {
           toast.error(err?.response?.data.error?.explanation)

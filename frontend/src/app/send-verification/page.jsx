@@ -35,7 +35,6 @@ const VerificationNotice = () => {
                     setLoading(false);
                 })
                 .catch((err) => {
-                    console.log(err);
                     toast.error('Error sending email!');
                     setSuccess(false);
                     setLoading(false);
@@ -53,7 +52,6 @@ const VerificationNotice = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                console.log(err);
                 toast.error('Error sending email!');
                 setResending(false);
                 setSuccess(false);

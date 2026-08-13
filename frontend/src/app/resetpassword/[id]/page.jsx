@@ -19,7 +19,6 @@ const ResetPassword = () => {
     }, []);
 
     const validateToken = async (id) => {
-        console.log("token", token);
         setLoading(true); // Set loading to true
        if(id){
         try {
@@ -68,7 +67,6 @@ const ResetPassword = () => {
                 Router.push('/login');
 
             } else {
-                console.log(response);
 
                 setResponseMessage('Error updating password.');
             }

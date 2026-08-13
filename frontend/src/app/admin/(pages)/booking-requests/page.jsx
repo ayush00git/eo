@@ -46,12 +46,10 @@ const AdminRequests = () => {
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/booking/getBooking`)
       .then((res) => {
         setRequest(res.data.data);
-        console.log(res.data.data);
 
 
       })
       .catch((err) => {
-        console.log(err);
       })
   }
 

@@ -69,7 +69,6 @@ const BookingEditModal = ({ initalData,isOpen, onClose, onSubmit,venueList=[] })
             }
             catch (error) {
                 setLoading(false);
-                console.log(error);
                 if (error.response && error.response.data.error.message.includes("File size")) {
                     toast.error("File Is too large")
                   }

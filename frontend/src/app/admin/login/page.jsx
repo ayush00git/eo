@@ -35,11 +35,9 @@ function AdminLogin() {
   const handleSubmit = async (e) => {
     setIsLoginSubmitting(true);
     e.preventDefault();
-    console.log(formdata);
 
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/login`, formdata).
       then((res) => {
-        console.log(res.data);
         if (res.data.data.token === undefined) {
           toast.error('Invalid Credentials!');
           setIsLoginSubmitting(false);

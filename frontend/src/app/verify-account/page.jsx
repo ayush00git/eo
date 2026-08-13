@@ -37,7 +37,6 @@ const VerificationNotice = () => {
                     setLoading(false);
                 })
                 .catch((err) => {
-                    console.log(err);
                     toast.error('Error in verifying account!');
                     setSuccess(false);
                     setLoading(false);

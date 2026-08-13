@@ -1,5 +1,9 @@
 "use client";
 import { X } from "lucide-react";
+import { Field, fieldClass, submitButtonClass } from "@/components/ui/form-field";
+
+// Re-exported for existing importers (`import { Field } from ".../ModalShell"`).
+export { Field, fieldClass, submitButtonClass };
 
 /** Shared chrome for the admin add/update modals (venue & staff). */
 export default function ModalShell({ isOpen, onClose, title, loading, children }) {
@@ -36,18 +40,3 @@ export default function ModalShell({ isOpen, onClose, title, loading, children }
     </div>
   );
 }
-
-export const fieldClass =
-  "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 placeholder:text-neutral-400";
-
-export function Field({ label, children }) {
-  return (
-    <div>
-      <label className="mb-1 block text-sm font-medium text-neutral-700">{label}</label>
-      {children}
-    </div>
-  );
-}
-
-export const submitButtonClass =
-  "flex w-full items-center justify-center rounded-md bg-amber-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-neutral-300";

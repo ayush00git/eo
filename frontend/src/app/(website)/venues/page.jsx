@@ -19,10 +19,17 @@ function Venues() {
     });
   }
   return (
-    <div className='grid gap-2 gap-y-5 lg:grid-cols-4 justify-center items-center md:grid-cols-2 grid-cols-1  p-4 h-full'>
-      {venues.map((venue,index)=>{
-        return <VenueCard key={index} venue={venue}/>
-      })}
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Venue List</h1>
+        <p className="mt-1 text-sm text-neutral-500">Browse campus venues available for booking.</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {venues.map((venue) => (
+          <VenueCard key={venue._id} venue={venue} />
+        ))}
+      </div>
     </div>
   )
 }

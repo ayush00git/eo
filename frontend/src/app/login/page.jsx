@@ -40,18 +40,15 @@ function Login() {
   }
   const handleSubmit = async () => {
     setIsLoginSubmitting(true);
-    console.log(formdata);
 
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, formdata).
       then((res) => {
-        console.log(res.data);
         localStorage.setItem('xccess-token', res.data.data.token);
         setTimeout(() => {
           router.push('/dashboard');
         }, 2000);
       })
       .catch((err) => {
-        console.log(err);
         setIsLoginSubmitting(false)
 
         if (err?.response?.data?.error?.explanation == "User not verified") {

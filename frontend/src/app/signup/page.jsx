@@ -82,17 +82,14 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formdata);
         setSubmitting(true)
 
         axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, formdata).
             then((res) => {
-                console.log(res.data);
                 router.push(`/send-verification?email=${formdata.email}`);
 
             })
             .catch((err) => {
-                console.log(err);
                 setSubmitting(false);
                 toast.error(err?.response?.data?.error?.explanation);
             });
