@@ -33,12 +33,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
-        <Header />
-        <Toaster />
-        <div className="relative min-h-screen">
-          <div className="pb-10">
-            {children}
-          </div>
+        {/* Sticky-footer shell: header and footer keep their natural height,
+            main claims exactly what's left, so short pages (like /login)
+            never grow taller than the viewport. */}
+        <div className="flex min-h-dvh flex-col">
+          <Header />
+          <Toaster />
+          <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
           <Footer />
         </div>
       </body>

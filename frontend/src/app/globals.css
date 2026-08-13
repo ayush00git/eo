@@ -134,3 +134,134 @@ body {
   scrollbar-width: none;  /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
+
+/* Institute gold accent bar used under the header logo. Plain CSS instead of
+   a Tailwind gradient utility so it doesn't depend on gradient class naming. */
+.brand-accent-bar {
+  background: linear-gradient(to right, #d97706, #fcd34d, #d97706);
+}
+
+/* FullCalendar theme — restyled to match the app's card surfaces and the
+   institute's gold accent instead of FullCalendar's default blue theme. */
+.eo-calendar .fc {
+  --fc-border-color: #e5e5e5;
+  --fc-page-bg-color: transparent;
+  --fc-today-bg-color: rgba(217, 119, 6, 0.08);
+  font-family: inherit;
+}
+
+.eo-calendar .fc .fc-toolbar {
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.eo-calendar .fc .fc-toolbar-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #171717;
+}
+
+.eo-calendar .fc .fc-button {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  color: #404040;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 0.8rem;
+  box-shadow: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.eo-calendar .fc .fc-button:hover {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+.eo-calendar .fc .fc-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.35);
+}
+
+.eo-calendar .fc .fc-button-primary:not(:disabled).fc-button-active,
+.eo-calendar .fc .fc-button-primary:not(:disabled):active {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
+}
+
+.eo-calendar .fc-theme-standard td,
+.eo-calendar .fc-theme-standard th {
+  border-color: #e5e5e5;
+}
+
+.eo-calendar .fc-col-header-cell {
+  background: #fafafa;
+  padding: 0.5rem 0;
+}
+
+.eo-calendar .fc-col-header-cell-cushion {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #737373;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem;
+}
+
+.eo-calendar .fc-daygrid-day-number {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #525252;
+  padding: 0.35rem;
+}
+
+.eo-calendar .fc-day-today .fc-daygrid-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  margin: 0.2rem;
+  border-radius: 9999px;
+  background: #d97706;
+  color: #fff;
+}
+
+.eo-calendar .fc-daygrid-day:hover .fc-daygrid-day-frame {
+  background: rgba(0, 0, 0, 0.035);
+}
+
+.eo-calendar .fc-scrollgrid {
+  border-color: #e5e5e5;
+}
+
+.eo-calendar .fc-event {
+  border: none;
+  cursor: pointer;
+  background: transparent;
+}
+
+.eo-calendar .fc-daygrid-event-dot {
+  display: none;
+}
+
+/* Keep long event/venue titles from spilling out of their day cell instead
+   of truncating inside it. */
+.eo-calendar .fc-daygrid-day-events,
+.eo-calendar .fc-daygrid-event-harness,
+.eo-calendar .fc-daygrid-event,
+.eo-calendar .fc-timegrid-event,
+.eo-calendar .fc-event-main {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.eo-calendar .fc-timegrid-slot-label-cushion,
+.eo-calendar .fc-timegrid-axis-cushion {
+  font-size: 0.7rem;
+  color: #737373;
+}

@@ -1,15 +1,12 @@
 "use client";
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Mail } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-
-
-
+import { AuthShell, AuthTopBar, AuthCard } from "@/components/auth/AuthShell";
 
 const VerificationNotice = () => {
     const params = useSearchParams();
@@ -23,6 +20,7 @@ const VerificationNotice = () => {
         }
         else {
             toast.error('Account not found!');
+            setLoading(false);
         }
 
     }, []);
@@ -50,61 +48,63 @@ const VerificationNotice = () => {
 
     if (loading) {
         return (
-            <div className="text-center rounded-lg text-lg font-semibold">Processing...</div>
-        )
+            <AuthShell>
+                <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" />
+            </AuthShell>
+        );
     }
 
     if (!token) {
         return (
-            <div className="flex justify-center bg-white py-18 h-screen">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold mt-4">Account not found</h2>
-                    <p className="text-gray-600 mt-2">
-                        Account not found. Please try again.
-                    </p>
-                </div>
-            </div>
+            <AuthShell>
+                <AuthTopBar backHref="/login" backLabel="Back to login" />
+                <AuthCard>
+                    <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-2 p-8 text-center">
+                        <h2 className="text-xl font-semibold text-neutral-900">Account not found</h2>
+                        <p className="text-sm text-neutral-500">Account not found. Please try again.</p>
+                    </div>
+                </AuthCard>
+            </AuthShell>
         );
     }
+
     if (success) {
         return (
-
-            <Card className="max-w-md mx-auto p-6 mt-42  text-center shadow-lg">
-                <CardContent>
-                    <Mail className="w-12 h-12 mx-auto text-blue-500" />
-                    <h2 className="text-xl font-semibold mt-4">Account Verified</h2>
-                    <p className="text-gray-600 mt-2">
-                        Your account has been verified. You can now login.
-                    </p>
-                    <a href="/login" className="block mt-4 text-blue-500 hover:underline">Go back to home</a>
-                </CardContent>
-            </Card>
+            <AuthShell>
+                <AuthTopBar backHref="/login" backLabel="Back to login" />
+                <AuthCard>
+                    <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-3 p-8 text-center">
+                        <div className="flex size-12 items-center justify-center rounded-full bg-amber-50">
+                            <ShieldCheck className="size-6 text-amber-600" />
+                        </div>
+                        <h2 className="text-xl font-semibold text-neutral-900">Account verified</h2>
+                        <p className="text-sm text-neutral-500">Your account has been verified. You can now login.</p>
+                        <a href="/login" className="text-sm text-amber-700 underline-offset-2 hover:underline">Go back to login</a>
+                    </div>
+                </AuthCard>
+            </AuthShell>
         );
     }
-    else {
-        return (
-            <div className="flex justify-center bg-white py-18 h-screen">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold mt-4">Error Verifing Account</h2>
-                    <p className="text-gray-600 mt-2">
-                        There was an error while verification of Your Account. Please try again.
-                    </p>
 
+    return (
+        <AuthShell>
+            <AuthTopBar backHref="/login" backLabel="Back to login" />
+            <AuthCard>
+                <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-2 p-8 text-center">
+                    <h2 className="text-xl font-semibold text-neutral-900">Error verifying account</h2>
+                    <p className="text-sm text-neutral-500">There was an error verifying your account. Please try again.</p>
                 </div>
-            </div>
-        );
-    }
+            </AuthCard>
+        </AuthShell>
+    );
 };
+
 const page = () => {
     return (
-        <Suspense fallback={<p>Loading...</p>}>
-            return (
-
+        <Suspense fallback={<AuthShell><div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" /></AuthShell>}>
             <VerificationNotice />
-
-            )
-
-        </Suspense >
+        </Suspense>
     )
 }
-    export default page;
+
+export default page;

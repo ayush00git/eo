@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { set } from 'react-hook-form';
+import { User, Mail, Lock, ShieldCheck } from 'lucide-react'
+import { AuthShell, AuthTopBar, AuthCard } from '@/components/auth/AuthShell'
 
+const INSTRUCTIONS = [
+  "Register with your NIT Hamirpur faculty email — student email IDs can't be used to book venues.",
+  "You'll get a verification link over email before you can sign in.",
+  "Already registered? Sign in instead.",
+];
 
-
-function Login() {
+function Signup() {
     const router = useRouter();
     const [Submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -89,52 +93,85 @@ function Login() {
             })
             .catch((err) => {
                 console.log(err);
+                setSubmitting(false);
                 toast.error(err?.response?.data?.error?.explanation);
             });
     }
-    if (!loading) {
+
+    if (loading) {
         return (
-            <div className='flex justify-center bg-white py-18 h-screen'>
+            <AuthShell>
+                <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" />
+            </AuthShell>
+        );
+    }
 
-                <div className=' border-2 border-r-0 drop-shadow-xs px-16 py-15 min-h-1/2 bg-white rounded-l-xl flex flex-col justify-start  w-1/3 space-y-4'>
-                    <h1 className='text-3xl  font-bold text-center mb-10'>Create Account</h1>
-                    {errorpass && <p className='text-red-500 '>{errorpass}</p>}
-                    {errormail && <p className='text-red-500 '>{errormail}</p>}
-                    <form onSubmit={handleSubmit} >
-                        <div className='flex flex-col space-y-8'>
+    return (
+        <AuthShell>
+            <AuthTopBar rightHref="/admin/login" rightLabel="Admin login" />
+            <AuthCard>
+                <div className="flex w-full flex-col justify-center gap-6 p-8 sm:w-1/2 sm:p-14">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Create account</h1>
+                        <p className="mt-1 text-sm text-neutral-500">
+                            Register with your faculty email to start booking venues.
+                        </p>
+                    </div>
 
-                            <input required type='text' placeholder='Name' id="name" onChange={handleChange} className='w-full p-2 border border-gray-300 rounded-md' />
-                            <input required type='text' placeholder='Email' id="email" onChange={handleChange} className='w-full p-2 border border-gray-300 rounded-md' />
-                            <input required type='password' placeholder='Password' id="password" onChange={handleChange} className='w-full p-2 border border-gray-300 rounded-md' />
-                            <input required type='password' placeholder='Confirm Password' id="cpassword" onChange={handleChange} className='w-full p-2 border border-gray-300 rounded-md' />
-                            <button type="submit" className='w-full p-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:text-black' disabled={errorpass || errormail}  >{Submitting ? "Creating Account" : "Create Account"}</button>
-                            <div className='text-center flex flex-col space-y-2'>
-                                <div className='space-x-2 text-center'>Already have account?
-                                    <a href='/login' className='text-center ml-2 text-blue-500 underline'>SignIn</a>
-                                </div>
-                            </div>
-
+                    {(errorpass || errormail) && (
+                        <div className="space-y-1 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                            {errorpass && <p>{errorpass}</p>}
+                            {errormail && <p>{errormail}</p>}
                         </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                        <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+                            <User className="size-4 shrink-0 text-neutral-400" />
+                            <input required type="text" placeholder="Name" id="name" onChange={handleChange} className="w-full min-w-0 outline-none placeholder:text-neutral-400" />
+                        </label>
+                        <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+                            <Mail className="size-4 shrink-0 text-neutral-400" />
+                            <input required type="text" placeholder="Email" id="email" onChange={handleChange} className="w-full min-w-0 outline-none placeholder:text-neutral-400" />
+                        </label>
+                        <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+                            <Lock className="size-4 shrink-0 text-neutral-400" />
+                            <input required type="password" placeholder="Password" id="password" onChange={handleChange} className="w-full min-w-0 outline-none placeholder:text-neutral-400" />
+                        </label>
+                        <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+                            <Lock className="size-4 shrink-0 text-neutral-400" />
+                            <input required type="password" placeholder="Confirm password" id="cpassword" onChange={handleChange} className="w-full min-w-0 outline-none placeholder:text-neutral-400" />
+                        </label>
+                        <button
+                            type="submit"
+                            className="flex w-full items-center justify-center rounded-md bg-amber-600 p-2.5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+                            disabled={!!errorpass || !!errormail}
+                        >
+                            {Submitting ? "Creating account…" : "Create account"}
+                        </button>
+                        <p className="text-center text-sm text-neutral-500">
+                            Already have an account?{' '}
+                            <a href="/login" className="text-amber-700 underline-offset-2 hover:underline">Sign in</a>
+                        </p>
                     </form>
                 </div>
-                <div className=' border-2 border-l-0 drop-shadow-xs px-16 min-h-1/2 bg-gray-100 rounded-r-xl flex flex-col justify-start pt-20 w-1/3 space-y-4'>
-                    <h1 className='text-3xl mb-16 font-bold '>Instructions</h1>
-                    <ul className='list-disc space-y-6'>
-                        <li className='text-md'>If your Email already registered using your Faculty email ID, you can login and book Venues.</li>
-                        <li className='text-md'>If your Email haven't registered yet, <a href='/signup' className='text-blue-400 underline'>Click Here</a> to SignUp  </li>
 
-                        <li className='text-md'>If you are facing any problems in logging in or registering, please contact Estate Office.
-
-                        </li>
+                <div className="hidden w-1/2 flex-col justify-center gap-5 border-l border-neutral-200 p-14 sm:flex">
+                    <h2 className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">
+                        Before you register
+                    </h2>
+                    <ul className="space-y-4">
+                        {INSTRUCTIONS.map((text, i) => (
+                            <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700">
+                                <ShieldCheck className="mt-0.5 size-4 shrink-0 text-amber-600" />
+                                <span>{text}</span>
+                            </li>
+                        ))}
                     </ul>
-
                 </div>
-
-
-            </div>
-        )
-    }
+            </AuthCard>
+        </AuthShell>
+    )
 }
 
-
-export default Login
+export default Signup

@@ -1,7 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { useParams,useRouter } from 'next/navigation';
-
+import { useParams, useRouter } from 'next/navigation';
+import { Lock } from 'lucide-react';
+import { AuthShell, AuthTopBar, AuthCard } from '@/components/auth/AuthShell';
 
 const ResetPassword = () => {
     const [token, setToken] = useState('');
@@ -65,10 +66,10 @@ const ResetPassword = () => {
             if (response.ok) {
                 setResponseMessage('Password updated successfully!');
                 Router.push('/login');
-                
+
             } else {
                 console.log(response);
-                
+
                 setResponseMessage('Error updating password.');
             }
         } catch (error) {
@@ -80,47 +81,56 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Reset Password</h1>
-                
-                {responseMessage && (
-                    <div className={`p-4 rounded-lg mb-6 text-center ${
-                        responseMessage.includes('successfully') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>
-                        {responseMessage}
+        <AuthShell>
+            <AuthTopBar backHref="/login" backLabel="Back to login" />
+            <AuthCard>
+                <div className="mx-auto flex w-full max-w-sm flex-col justify-center gap-6 p-8">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Reset password</h1>
+                        <p className="mt-1 text-sm text-neutral-500">Choose a new password for your account.</p>
                     </div>
-                )}
 
-                {/* Loader Indicator */}
-                {loading ? (
-                    <div className="flex justify-center mb-4">
-                        <div className="loader">Loading...</div> {/* You can replace this with a spinner */}
-                    </div>
-                ) : responseMessage.includes('successfully') ? (
-                    <form onSubmit={updatePassword}>
-                        <div className="mb-4">
-                            <label htmlFor="newPassword" className="block text-gray-700 font-medium mb-2">
-                                New Password
-                            </label>
-                            <input
-                                type="password"
-                                id="newPassword"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                            />
+                    {responseMessage && (
+                        <div
+                            className={`rounded-md px-3 py-2 text-center text-sm ${
+                                responseMessage.includes('successfully')
+                                    ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                                    : 'border border-red-200 bg-red-50 text-red-600'
+                            }`}
+                        >
+                            {responseMessage}
                         </div>
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                            Update Password
-                        </button>
-                    </form>
-                ) : null}
-            </div>
-        </div>
+                    )}
+
+                    {loading ? (
+                        <div className="flex justify-center py-4">
+                            <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" />
+                        </div>
+                    ) : responseMessage.includes('successfully') && !responseMessage.includes('Password updated') ? (
+                        <form onSubmit={updatePassword} className="flex flex-col gap-4">
+                            <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+                                <Lock className="size-4 shrink-0 text-neutral-400" />
+                                <input
+                                    type="password"
+                                    id="newPassword"
+                                    placeholder="New password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                    className="w-full min-w-0 outline-none placeholder:text-neutral-400"
+                                />
+                            </label>
+                            <button
+                                type="submit"
+                                className="flex w-full items-center justify-center rounded-md bg-amber-600 p-2.5 text-sm font-medium text-white transition hover:bg-amber-700"
+                            >
+                                Update password
+                            </button>
+                        </form>
+                    ) : null}
+                </div>
+            </AuthCard>
+        </AuthShell>
     );
 };
 

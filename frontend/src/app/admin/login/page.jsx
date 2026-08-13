@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { Mail, Lock } from 'lucide-react'
+import { AuthShell, AuthTopBar, AuthCard } from '@/components/auth/AuthShell'
 
-
-
-function page() {
+function AdminLogin() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
@@ -44,7 +44,7 @@ function page() {
           toast.error('Invalid Credentials!');
           setIsLoginSubmitting(false);
           return;
-          
+
         }
         localStorage.setItem('xccess-token-Admin', res.data.data.token);
         setTimeout(() => {
@@ -58,24 +58,67 @@ function page() {
         toast.error('Invalid Credentials!');
       });
   }
-  if (!loading) {
+
+  if (loading) {
     return (
-      <div className="w-1/3 mx-auto mt-25 p-6 bg-white rounded-xl drop-shadow-lg ">
-        <h1 className="text-2xl font-semibold text-gray-800">Admin Login</h1>
-        <form className="mt-6">
-          <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Email</label>
-            <input type="email" id="email" value={formdata.email} onChange={handleChange} className="w-full p-3 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" />
-          </div>
-          <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium text-gray-600">Password</label>
-            <input type="password" id="password" value={formdata.password} onChange={handleChange} className="w-full p-3 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" />
-          </div>
-          <button className="w-full p-4 text-white bg-indigo-500 rounded-lg font-semibold disabled:bg-gray-400" disabled={isLoginSubmitting} onClick={handleSubmit}>{isLoginSubmitting?<div className='mx-auto  animate-spin rounded-full h-4 w-2 my-1  border-b-2 border-white'></div>:<div>Login</div>}</button>
-        </form>
-      </div>
-    )
+      <AuthShell>
+        <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-amber-600" />
+      </AuthShell>
+    );
   }
+
+  return (
+    <AuthShell>
+      <AuthTopBar rightHref="/login" rightLabel="User login" />
+      <AuthCard>
+        <div className="mx-auto flex w-full max-w-sm flex-col justify-center gap-6 p-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Admin login</h1>
+            <p className="mt-1 text-sm text-neutral-500">
+              Sign in with your Estate Office admin credentials.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+              <Mail className="size-4 shrink-0 text-neutral-400" />
+              <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                value={formdata.email}
+                onChange={handleChange}
+                className="w-full min-w-0 outline-none placeholder:text-neutral-400"
+              />
+            </label>
+            <label className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-2.5 text-sm transition focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/30">
+              <Lock className="size-4 shrink-0 text-neutral-400" />
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                value={formdata.password}
+                onChange={handleChange}
+                className="w-full min-w-0 outline-none placeholder:text-neutral-400"
+              />
+            </label>
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center rounded-md bg-amber-600 p-2.5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+              disabled={isLoginSubmitting}
+              onClick={handleSubmit}
+            >
+              {isLoginSubmitting ? (
+                <div className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              ) : (
+                "Login"
+              )}
+            </button>
+          </form>
+        </div>
+      </AuthCard>
+    </AuthShell>
+  )
 }
 
-export default page
+export default AdminLogin
