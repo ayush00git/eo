@@ -9,7 +9,7 @@ import axios from 'axios';
 import EventDetails from '@/components/EventDetails';
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
-import { ArrowLeft, MapPin, CalendarRange, Download, CalendarX2 } from 'lucide-react';
+import { ArrowLeft, MapPin, CalendarRange, Download, CalendarX2, MessageSquareWarning } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -159,19 +159,27 @@ export default function VenueBookingCalendar() {
             Live, approved bookings across every campus hall.
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={generatePDF}
-          disabled={exporting}
-          className="gap-1.5 self-start sm:self-auto"
-        >
-          {exporting ? (
-            <div className="size-4 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-600" />
-          ) : (
-            <Download className="size-4" />
-          )}
-          Export PDF
-        </Button>
+        <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+          <Button variant="outline" asChild className="gap-1.5">
+            <a href="https://cms.nith.ac.in" target="_blank" rel="noopener noreferrer">
+              <MessageSquareWarning className="size-4" />
+              Complaint Management
+            </a>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={generatePDF}
+            disabled={exporting}
+            className="gap-1.5"
+          >
+            {exporting ? (
+              <div className="size-4 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-600" />
+            ) : (
+              <Download className="size-4" />
+            )}
+            Export PDF
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import EventDetails from '@/components/EventDetails';
-import { User, ArrowLeft, MapPin, CalendarRange, CalendarX2 } from 'lucide-react';
+import { User, ArrowLeft, MapPin, CalendarRange, CalendarX2, MessageSquareWarning } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -151,13 +151,24 @@ export default function VenueBookingCalendar() {
               Live, approved bookings across every campus hall.
             </p>
           </div>
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-amber-300 hover:text-amber-700 sm:self-auto"
-          >
-            <User className="size-4" />
-            Login
-          </Link>
+          <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+            <a
+              href="https://cms.nith.ac.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-amber-300 hover:text-amber-700"
+            >
+              <MessageSquareWarning className="size-4" />
+              Complaint Management
+            </a>
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 shadow-sm transition hover:border-amber-300 hover:text-amber-700"
+            >
+              <User className="size-4" />
+              Login
+            </Link>
+          </div>
         </div>
 
         <div className="w-full">
