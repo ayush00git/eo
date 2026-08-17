@@ -44,6 +44,8 @@ jobs:
           ssh -i ~/.ssh/deploy_key -p 22 \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" '
               set -e
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
               cd /home/serv-admin/Documents/projects/eo/frontend
               npm ci
               npm run build --if-present
