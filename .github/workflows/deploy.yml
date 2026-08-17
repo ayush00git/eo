@@ -47,7 +47,7 @@ jobs:
               export NVM_DIR="$HOME/.nvm"
               [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
               cd /home/serv-admin/Documents/projects/eo/frontend
-              npm ci
+              npm i
               npm run build --if-present
               sudo -n systemctl restart eo-frontendv2
               sudo -n systemctl is-active --quiet eo-frontendv2
