@@ -4,8 +4,8 @@ const { ADMIN_EMAIL } = require('../config/server-config');
 
 async function mailBookkingNotificationToAdmin(user, booking, venue) {
     const response = await mailSender.sendMail({
-        from: "no-reply-BookingSystem@nith.ac.in",
-        to: ADMIN_EMAIL,
+        from: ADMIN_EMAIL,
+        to: "estateofficer@nith.ac.in",
         subject: `New Booking Request for ${venue}`,
         html: `<!DOCTYPE html>
 <html>
@@ -54,9 +54,9 @@ async function mailBookkingNotificationToAdmin(user, booking, venue) {
 </head>
 <body>
   <div class="container">
-    <h2>New Booking Arrival Notification</h2>
-    <p>Hello Admin,</p>
-    <p>This is to inform you that a user has arrived for their scheduled booking. Below are the details:</p>
+    <h2>New Booking Request Received</h2>
+    <p>Hello Estate Officer,</p>
+    <p>A new venue booking request has been submitted and is awaiting your review. Below are the details:</p>
 
     <div class="details">
       <p><strong>User Name:</strong> ${user?.name}</p>
@@ -65,7 +65,7 @@ async function mailBookkingNotificationToAdmin(user, booking, venue) {
       <p><strong>Time:</strong> ${booking.startTime} to ${booking.endTime}</p>
     </div>
 
-    <p>Please ensure that the venue is ready and any required arrangements are in place.</p>
+    <p>Please review this request and approve or reject it at your earliest convenience.</p>
 
     <p>Best Regards,<br>
     <strong>Booking System</strong></p>
@@ -83,7 +83,7 @@ async function mailBookkingNotificationToAdmin(user, booking, venue) {
 
 async function mailSendApprovedSimple(user, booking, venue, mesg) { 
 const response = await mailSender.sendMail({
-    from: "no-reply-EstateOffice@nith.ac.in",
+    from: ADMIN_EMAIL,
     to: user?.email,
     subject: 'Booking Status Update',
     text: `Your booking status has been updated. Please find the details below:\n\nStatus: ${booking.status}\n\nFor more details, visit your account or Estate Office NIT Hamirpur.`,
@@ -175,7 +175,7 @@ return response;
 
 async function mailSendApprovedConflicts(user, booking, venue, mesg, conflicts) {
     const response = await mailSender.sendMail({
-        from:"no-reply-EstateOffice@nith.ac.in",
+        from: ADMIN_EMAIL,
         to: user?.email,
         subject: 'Booking Status Update',
         html:`<!DOCTYPE html>
@@ -270,7 +270,7 @@ async function mailSendApprovedConflicts(user, booking, venue, mesg, conflicts) 
 
 async function mailSendVictim(user, booking, venue, conflict) {
     const response=await mailSender.sendMail({
-        from:"no-reply-EstateOffice@nith.ac.in",
+        from: ADMIN_EMAIL,
         to: user?.email,
         subject: 'Conflict in Your Approved Booking',
         html:`<!DOCTYPE html>
@@ -371,7 +371,7 @@ async function mailSendVictim(user, booking, venue, conflict) {
 
 async function mailsendRejectedconflicts(user, booking, venue,conflicts, mesg) {
    const response= await mailSender.sendMail({
-        from:"no-reply-EstateOffice@nith.ac.in",
+        from: ADMIN_EMAIL,
         to: user?.email,
         subject: 'Booking Rejected',
         html:`<!DOCTYPE html>
@@ -466,7 +466,7 @@ async function mailsendRejectedconflicts(user, booking, venue,conflicts, mesg) {
 
 async function mailsendRejected(user, booking, venue, mesg) {
     const response=await mailSender.sendMail({
-        from:"no-reply-EstateOffice@nith.ac.in",
+        from: ADMIN_EMAIL,
         to: user?.email,
         subject: 'Booking Request Rejected',
         html:`<!DOCTYPE html>
@@ -555,7 +555,7 @@ async function mailsendRejected(user, booking, venue, mesg) {
 
 async function mailtoStaff(user, booking, venue) {
     const response=await mailSender.sendMail({
-        from:"no-reply-EstateOffice@nith.ac.in",
+        from: ADMIN_EMAIL,
         to: user?.email,
         subject: `Booking For ${venue} `,
         html:`<!DOCTYPE html>
