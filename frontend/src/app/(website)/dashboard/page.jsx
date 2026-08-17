@@ -9,7 +9,7 @@ import axios from 'axios';
 import EventDetails from '@/components/EventDetails';
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
-import { ArrowLeft, MapPin, CalendarRange, Download, CalendarX2, MessageSquareWarning } from 'lucide-react';
+import { ArrowLeft, MapPin, CalendarRange, Download, CalendarX2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -160,12 +160,6 @@ export default function VenueBookingCalendar() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2 self-start sm:self-auto">
-          <Button variant="outline" asChild className="gap-1.5">
-            <a href="https://cms.nith.ac.in" target="_blank" rel="noopener noreferrer">
-              <MessageSquareWarning className="size-4" />
-              Complaint Management
-            </a>
-          </Button>
           <Button
             variant="outline"
             onClick={generatePDF}
