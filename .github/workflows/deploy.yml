@@ -1,0 +1,56 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+# Prevent overlapping deploys if multiple pushes land close together
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 22 -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Pull latest code
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 22 \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" '
+              set -e
+              cd /home/serv-admin/Documents/projects/eo
+              git pull
+            '
+
+      - name: Deploy backend
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 22 \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" '
+              set -e
+              sudo -n systemctl restart eo-backendv2
+              sudo -n systemctl is-active --quiet eo-backendv2
+            '
+
+      - name: Deploy frontend
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 22 \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" '
+              set -e
+              cd /home/serv-admin/Documents/projects/eo/frontend
+              npm ci
+              npm run build --if-present
+              sudo -n systemctl restart eo-frontendv2
+              sudo -n systemctl is-active --quiet eo-frontendv2
+            '
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
