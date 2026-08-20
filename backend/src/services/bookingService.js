@@ -3,7 +3,7 @@ const AppError = require('../utils/errors/app-error');
 const { StatusCodes } = require('http-status-codes');
 const { BookingRepository, HallRepository,AudiHelperRepositories } = require('../repositories');
 const bookingRepo = new BookingRepository();
-const { mailSendApprovedSimple, mailsendRejectedconflicts, mailSendVictim, mailSendApprovedConflicts, mailsendRejected, mailtoStaff,mailBookkingNotificationToAdmin } = require('./mailerService')
+const { mailSendApprovedSimple, mailsendRejectedconflicts, mailSendVictim, mailSendApprovedConflicts, mailsendRejected, mailtoStaff,mailBookkingNotificationToAdmin, mailSendCancelled } = require('./mailerService')
 const { AuthRepository } = require('../repositories');
 const authRepo = new AuthRepository();
 const hallrpo = new HallRepository();
@@ -249,7 +249,12 @@ async function updateBookingStatus(id, data) {
         }
 
         if (data.status === "cancelled") {
+            const venue = await hallrpo.getById(booking.hall);
             const response = await bookingRepo.update(id, { status: "cancelled" });
+            mailSendCancelled(booking.user, booking, venue.name, data.messFromAdmin).then((response) => {
+            }
+            ).catch((error) => {
+            });
             return response;
         }
         if (data.status === "rejected") {

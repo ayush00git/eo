@@ -652,5 +652,84 @@ async function mailtoStaff(user, booking, venue) {
 
 
 
-module.exports = { mailBookkingNotificationToAdmin,mailSendApprovedSimple,mailSendApprovedConflicts,mailSendVictim,mailsendRejectedconflicts,mailsendRejected ,mailtoStaff};
+async function mailSendCancelled(user, booking, venue, mesg) {
+    const response = await mailSender.sendMail({
+        from: ADMIN_EMAIL,
+        to: user?.email,
+        subject: 'Booking Approval Cancelled',
+        html: `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Approval Cancelled</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        .header {
+            color: #d9534f;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .highlight {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .admin-message {
+            background: #ffefc7;
+            padding: 10px;
+            border-left: 4px solid #f0ad4e;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="header">Booking Approval Cancelled</p>
+
+        <p>Dear <strong>${user?.name}</strong>,</p>
+
+        <p>We regret to inform you that your previously <strong>approved</strong> booking request for <strong>${venue}</strong> from 📅 <strong>${booking.startDate}</strong> @ ⏰ <strong>${booking.startTime}</strong> to 📅 <strong>${booking.endDate}</strong> @ ⏰ <strong>${booking.endTime}</strong> has been <span class="highlight">cancelled</span> by the Estate Office.</p>
+
+        ${mesg ? `<div class="admin-message"><strong>Message From Admin:</strong> ${mesg}</div>` : ""}
+
+        <p>If you have any concerns or wish to submit a new request with an alternative schedule, please feel free to reach out to us.</p>
+
+        <p>We appreciate your understanding and apologize for any inconvenience caused.</p>
+
+        <p class="footer">
+            Best Regards,<br>
+            <strong>Estate Officer</strong><br>
+            NIT Hamirpur
+        </p>
+    </div>
+</body>
+</html>
+`
+    });
+    return response;
+}
+
+module.exports = { mailBookkingNotificationToAdmin,mailSendApprovedSimple,mailSendApprovedConflicts,mailSendVictim,mailsendRejectedconflicts,mailsendRejected ,mailtoStaff,mailSendCancelled};
 

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Check, X, Building2, User, Calendar, Clock, FileText, Inbox } from 'lucide-react'
+import { Check, X, Ban, Building2, User, Calendar, Clock, FileText, Inbox } from 'lucide-react'
 import axios from "axios";
 import ApproveModal from "@/components/Approvemodal";
 import RejectModal from "@/components/RejectModal";
+import CancelApprovalModal from "@/components/CancelApprovalModal";
 import { cn } from "@/lib/utils";
 import { STATUS_BADGE } from "@/lib/status";
 
@@ -18,6 +19,7 @@ const AdminRequests = () => {
   const [filter, setFilter] = useState("pending");
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModal2Open, setModal2Open] = useState(false);
+  const [isCancelModalOpen, setCancelModalOpen] = useState(false);
 
   const [venues, setVenues] = useState([]);
   const [initialData, setInitialData] = useState([]);
@@ -77,6 +79,10 @@ const AdminRequests = () => {
     setInitialData(item);
     setModal2Open(true);
   }
+  const handleCancelApproval = (item) => {
+    setInitialData(item);
+    setCancelModalOpen(true);
+  }
 
   const filteredRequests = requests.filter((req) => req.status === filter);
 
@@ -84,6 +90,7 @@ const AdminRequests = () => {
     <div>
       <ApproveModal isOpen={isModalOpen} onClose={() => { setModalOpen(false) }} selectedEvent={initialData} onSubmit={handleUpdateSubmit} venues={venues} approvedBookings={requests.filter((req) => req.status === 'approved')} />
       <RejectModal isOpen={isModal2Open} onClose={() => { setModal2Open(false) }} selectedEvent={initialData} onSubmit={handleUpdateSubmit} venues={venues} approvedBookings={requests.filter((req) => req.status === 'approved')} />
+      <CancelApprovalModal isOpen={isCancelModalOpen} onClose={() => { setCancelModalOpen(false) }} selectedEvent={initialData} onSubmit={handleUpdateSubmit} venues={venues} />
 
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Booking Requests</h1>
@@ -209,6 +216,18 @@ const AdminRequests = () => {
                     >
                       <X className="size-4" />
                       Reject
+                    </button>
+                  </div>
+                )}
+
+                {req.status === "approved" && (
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+                      onClick={() => handleCancelApproval(req)}
+                    >
+                      <Ban className="size-4" />
+                      Cancel Approval
                     </button>
                   </div>
                 )}
