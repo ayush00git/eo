@@ -192,7 +192,7 @@ export default function BookVenue() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Club / society / organization">
+        <Field label="Club/Society/Department">
           <input
             type="text"
             id="Organization"

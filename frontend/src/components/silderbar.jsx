@@ -37,7 +37,7 @@ function Silderbar({ isopen, setIsopen }) {
 
   return (
     <aside
-      className={`sticky top-0 z-40 flex h-screen flex-col justify-between border-r border-neutral-200 bg-white transition-all duration-300 ${
+      className={`sticky top-0 z-40 flex h-screen flex-col border-r border-neutral-200 bg-white transition-all duration-300 ${
         isopen ? 'w-64' : 'w-16'
       }`}
     >
@@ -83,25 +83,22 @@ function Silderbar({ isopen, setIsopen }) {
               </Link>
             );
           })}
+          <button
+            onClick={handleLogout}
+            className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all ${
+              !isopen ? 'justify-center px-0' : ''
+            }`}
+          >
+            <LogOut className="size-5 shrink-0 text-red-500 group-hover:text-red-600" />
+            {isopen ? (
+              <span className="truncate">Logout</span>
+            ) : (
+              <span className="absolute left-full ml-3 hidden rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white shadow-md group-hover:block z-50 whitespace-nowrap">
+                Logout
+              </span>
+            )}
+          </button>
         </nav>
-      </div>
-
-      <div className="border-t border-neutral-200 p-3">
-        <button
-          onClick={handleLogout}
-          className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all ${
-            !isopen ? 'justify-center px-0' : ''
-          }`}
-        >
-          <LogOut className="size-5 shrink-0 text-red-500 group-hover:text-red-600" />
-          {isopen ? (
-            <span className="truncate">Logout</span>
-          ) : (
-            <span className="absolute left-full ml-3 hidden rounded-md bg-red-600 px-2.5 py-1 text-xs font-medium text-white shadow-md group-hover:block z-50 whitespace-nowrap">
-              Logout
-            </span>
-          )}
-        </button>
       </div>
     </aside>
   );
